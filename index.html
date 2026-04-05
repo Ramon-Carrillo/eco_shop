@@ -35,7 +35,29 @@
 
     /* Gradient hero overlay */
     .hero-gradient {
-      background: linear-gradient(135deg, rgba(22,101,52,0.92) 0%, rgba(5,46,22,0.80) 60%, rgba(22,101,52,0.60) 100%);
+      background: linear-gradient(160deg, rgba(5,46,22,0.88) 0%, rgba(22,101,52,0.82) 45%, rgba(5,46,22,0.70) 100%);
+    }
+
+    /* Hero headline gradient text */
+    .headline-accent {
+      background: linear-gradient(90deg, #4ade80 0%, #86efac 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Chat preview card — floating animation */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50%       { transform: translateY(-8px); }
+    }
+    .float-card { animation: float 4s ease-in-out infinite; }
+
+    /* Trust bar divider dot */
+    .trust-dot::before {
+      content: '•';
+      margin: 0 0.6rem;
+      opacity: 0.4;
     }
 
     /* Card hover lift */
@@ -58,6 +80,12 @@
     .fade-up { opacity: 0; transform: translateY(28px); transition: opacity 0.55s ease, transform 0.55s ease; }
     .fade-up.visible { opacity: 1; transform: translateY(0); }
 
+    /* Focus-visible ring — keyboard accessibility */
+    :focus-visible { outline: 2px solid #4ade80; outline-offset: 3px; border-radius: 4px; }
+
+    /* Smooth link transitions */
+    a, button { transition-property: color, background-color, border-color, box-shadow, transform, opacity; transition-duration: 200ms; transition-timing-function: ease; }
+
     /* Mobile menu */
     #mobile-menu { transition: max-height 0.35s ease, opacity 0.3s ease; max-height: 0; opacity: 0; overflow: hidden; }
     #mobile-menu.open { max-height: 480px; opacity: 1; }
@@ -75,6 +103,19 @@
       transition: width 0.2s ease;
     }
     .nav-link:hover::after { width: calc(100% - 2rem); }
+
+    /* How-it-works step connector — desktop horizontal line */
+    .step-track::before {
+      content: '';
+      position: absolute;
+      top: 1.75rem; /* center of w-14 circle */
+      left: 12.5%;
+      right: 12.5%;
+      height: 2px;
+      background: linear-gradient(90deg, #bbf7d0 0%, #4ade80 50%, #bbf7d0 100%);
+      border-radius: 2px;
+    }
+    @media (max-width: 1023px) { .step-track::before { display: none; } }
 
     /* Language select — hide default arrow, keep native functionality */
     #lang-select { -webkit-appearance: none; -moz-appearance: none; appearance: none; }
@@ -214,110 +255,234 @@
   <main>
 
     <!-- ─────────────────────────── HERO ─────────────────────────── -->
-    <section id="hero" class="relative min-h-screen flex items-center overflow-hidden pt-16" aria-label="Hero">
+    <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center overflow-hidden pt-16" aria-label="Hero">
+
+      <!-- Background image -->
       <img
-        src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&w=1600&q=80"
-        alt="Lush green forest — EcoShop background"
-        class="absolute inset-0 w-full h-full object-cover object-center"
+        src="https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1800&q=80"
+        alt="Sunlit forest canopy — EcoShop background"
+        class="absolute inset-0 w-full h-full object-cover object-center scale-105"
       />
+      <!-- Overlay -->
       <div class="hero-gradient absolute inset-0" aria-hidden="true"></div>
+      <!-- Subtle bottom fade to blend into next section -->
+      <div class="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-beige/30 to-transparent" aria-hidden="true"></div>
 
-      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 grid lg:grid-cols-2 gap-12 items-center">
+      <!-- ── Main content — centred, single column -->
+      <div class="relative z-10 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 flex flex-col items-center text-center">
 
-        <!-- Left copy -->
-        <div class="text-white">
-          <div class="pill bg-white/15 text-sage text-sm font-semibold px-4 py-1.5 rounded-full mb-6 backdrop-blur-sm w-fit">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-            100% Sustainably Sourced
+        <!-- Badge -->
+        <div class="pill bg-white/15 backdrop-blur-sm border border-white/20 text-sage text-xs sm:text-sm font-semibold px-4 py-1.5 rounded-full mb-8 w-fit">
+          <svg class="w-3.5 h-3.5 shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+            <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"/>
+          </svg>
+          AI-Powered Sustainable Shopping
+        </div>
+
+        <!-- Headline -->
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-[1.1] tracking-tight mb-6">
+          Shop Sustainably with<br class="hidden sm:block"/>
+          Your Personal
+          <span class="headline-accent"> Eco Assistant</span>
+        </h1>
+
+        <!-- Subheadline -->
+        <p class="text-lg sm:text-xl text-white/80 leading-relaxed mb-10 max-w-2xl">
+          Our AI-powered virtual assistant helps you find eco-friendly products that match your values and needs — in seconds.
+        </p>
+
+        <!-- CTA buttons -->
+        <div class="flex flex-col sm:flex-row items-center gap-4 mb-12 w-full sm:w-auto">
+          <a href="#demo"
+             class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-sage text-forest text-base font-bold px-8 py-4 rounded-full hover:bg-green-300 active:scale-95 transition-all duration-200 shadow-xl shadow-black/20">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            Start Chat Now
+          </a>
+          <a href="#how-it-works"
+             class="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 border-2 border-white/40 bg-white/10 backdrop-blur-sm text-white text-base font-semibold px-8 py-4 rounded-full hover:border-white/70 hover:bg-white/20 active:scale-95 transition-all duration-200">
+            <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Watch 45s Demo
+          </a>
+        </div>
+
+        <!-- Trust signals bar -->
+        <div class="flex flex-wrap items-center justify-center gap-0 text-white/60 text-sm font-medium" role="list" aria-label="Trust signals">
+          <span role="listitem" class="flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-sage shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17H3a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v3"/>
+            </svg>
+            Powered by advanced AI
+          </span>
+          <span role="listitem" class="trust-dot flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-sage shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+            Available on Web &amp; WhatsApp
+          </span>
+          <span role="listitem" class="trust-dot flex items-center gap-1.5">
+            <svg class="w-4 h-4 text-sage shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            24/7
+          </span>
+        </div>
+
+        <!-- Floating chat preview card — desktop only -->
+        <div class="hidden lg:block absolute right-8 xl:right-16 top-1/2 -translate-y-1/2 w-72 float-card" aria-hidden="true">
+          <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-2xl">
+            <!-- Card header -->
+            <div class="flex items-center gap-2.5 mb-3 pb-3 border-b border-white/15">
+              <div class="w-8 h-8 rounded-full bg-forest flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4 text-sage" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+              </div>
+              <div>
+                <p class="text-white text-xs font-semibold">Eco Assistant</p>
+                <p class="text-sage text-xs flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-sage inline-block"></span>
+                  Online now
+                </p>
+              </div>
+            </div>
+            <!-- Messages -->
+            <div class="space-y-2.5 text-xs mb-3">
+              <div class="bg-white/15 rounded-xl rounded-tl-sm px-3 py-2 text-white/90 max-w-[85%]">
+                Hi! I'm your Eco Assistant 🌿 What are you looking for today?
+              </div>
+              <div class="bg-sage/80 rounded-xl rounded-tr-sm px-3 py-2 text-forest font-semibold max-w-[85%] ml-auto text-right">
+                Vegan gifts under $50
+              </div>
+              <div class="bg-white/15 rounded-xl rounded-tl-sm px-3 py-2 text-white/90 max-w-[90%]">
+                Found 12 perfect picks! 🎁 Top match: Beeswax Wrap Set — saves 52kg CO₂/yr
+              </div>
+            </div>
+            <!-- Typing indicator -->
+            <div class="flex gap-1.5 items-center px-3 py-2 bg-white/10 rounded-full w-fit">
+              <span class="pulse-dot w-1.5 h-1.5 rounded-full bg-white/60"></span>
+              <span class="pulse-dot w-1.5 h-1.5 rounded-full bg-white/60"></span>
+              <span class="pulse-dot w-1.5 h-1.5 rounded-full bg-white/60"></span>
+            </div>
           </div>
-
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-            Shop Good.<br/>
-            <span class="text-sage">Feel Good.</span><br/>
-            Do Good.
-          </h1>
-
-          <p class="text-lg text-white/80 leading-relaxed mb-8 max-w-lg">
-            Eco-friendly clothing, home goods, and accessories — crafted with care for the planet. Every purchase plants a tree and reduces your carbon footprint.
-          </p>
-
-          <div class="flex flex-wrap gap-4">
-            <a href="#benefits" class="inline-flex items-center gap-2 bg-sage text-forest font-bold px-6 py-3.5 rounded-full hover:bg-green-300 active:scale-95 transition-all duration-200 text-sm">
-              Shop Collection
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            </a>
-            <a href="#demo" class="inline-flex items-center gap-2 border-2 border-white/50 text-white font-semibold px-6 py-3.5 rounded-full hover:border-sage hover:text-sage transition-all duration-200 text-sm backdrop-blur-sm">
-              Talk to our AI
-            </a>
-          </div>
-
-          <!-- Stats strip -->
-          <div class="flex flex-wrap gap-6 mt-10 pt-8 border-t border-white/20">
-            <div>
-              <p class="text-2xl font-bold text-sage">40k+</p>
-              <p class="text-xs text-white/60 mt-0.5">Happy Customers</p>
-            </div>
-            <div>
-              <p class="text-2xl font-bold text-sage">120k</p>
-              <p class="text-xs text-white/60 mt-0.5">Trees Planted</p>
-            </div>
-            <div>
-              <p class="text-2xl font-bold text-sage">98%</p>
-              <p class="text-xs text-white/60 mt-0.5">Satisfaction Rate</p>
-            </div>
-            <div>
-              <p class="text-2xl font-bold text-sage">0</p>
-              <p class="text-xs text-white/60 mt-0.5">Plastic Packaging</p>
-            </div>
+          <!-- Small stat pills below card -->
+          <div class="flex gap-2 mt-3 justify-end">
+            <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-3 py-1.5 text-xs text-white/80 font-medium">40k+ users</div>
+            <div class="bg-sage/20 backdrop-blur-sm border border-sage/30 rounded-full px-3 py-1.5 text-xs text-sage font-semibold">98% happy</div>
           </div>
         </div>
 
-        <!-- Right product cards -->
-        <div class="hidden lg:grid grid-cols-2 gap-4" aria-hidden="true">
-          <div class="rounded-2xl overflow-hidden shadow-xl card-lift">
-            <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=600&q=80" alt="Sustainable clothing" class="w-full h-48 object-cover"/>
-            <div class="bg-white p-3">
-              <p class="text-xs font-semibold text-forest uppercase tracking-wide">Clothing</p>
-              <p class="font-bold text-gray-800 text-sm mt-0.5">Organic Cotton Tee</p>
-              <p class="text-forest font-bold text-sm mt-1">$38</p>
-            </div>
-          </div>
-          <div class="rounded-2xl overflow-hidden shadow-xl card-lift mt-8">
-            <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=600&q=80" alt="Eco home goods" class="w-full h-48 object-cover"/>
-            <div class="bg-white p-3">
-              <p class="text-xs font-semibold text-forest uppercase tracking-wide">Home Goods</p>
-              <p class="font-bold text-gray-800 text-sm mt-0.5">Bamboo Kitchen Set</p>
-              <p class="text-forest font-bold text-sm mt-1">$52</p>
-            </div>
-          </div>
-          <div class="rounded-2xl overflow-hidden shadow-xl card-lift">
-            <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80" alt="Eco accessories" class="w-full h-48 object-cover"/>
-            <div class="bg-white p-3">
-              <p class="text-xs font-semibold text-forest uppercase tracking-wide">Accessories</p>
-              <p class="font-bold text-gray-800 text-sm mt-0.5">Recycled Tote Bag</p>
-              <p class="text-forest font-bold text-sm mt-1">$24</p>
-            </div>
-          </div>
-          <div class="rounded-2xl overflow-hidden shadow-xl card-lift mt-8">
-            <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?auto=format&fit=crop&w=600&q=80" alt="Eco footwear" class="w-full h-48 object-cover"/>
-            <div class="bg-white p-3">
-              <p class="text-xs font-semibold text-forest uppercase tracking-wide">Footwear</p>
-              <p class="font-bold text-gray-800 text-sm mt-0.5">Hemp Canvas Sneakers</p>
-              <p class="text-forest font-bold text-sm mt-1">$89</p>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Scroll cue -->
-      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/60 flex flex-col items-center gap-1 text-xs" aria-hidden="true">
-        <span>Scroll</span>
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-white/50 flex flex-col items-center gap-1 text-xs z-10" aria-hidden="true">
+        <span class="tracking-widest uppercase text-[10px]">Scroll</span>
         <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
       </div>
     </section>
 
+    <!-- ─────────────────────── WHY CHOOSE ECOSHOP ASSISTANT ─────────────────────── -->
+    <section id="why-assistant" class="py-24 bg-beige" aria-labelledby="why-assistant-heading">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Section header -->
+        <div class="text-center mb-14 fade-up">
+          <span class="inline-block text-xs sm:text-sm font-bold text-forest uppercase tracking-widest bg-green-100 px-4 py-1.5 rounded-full mb-4">Why Our Assistant</span>
+          <h2 id="why-assistant-heading" class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
+            Shopping that actually <span class="text-forest">works for you</span>
+          </h2>
+          <p class="text-gray-500 mt-4 max-w-xl mx-auto leading-relaxed">
+            Forget endless scrolling. Our Eco Assistant cuts through the noise and brings the right products straight to you.
+          </p>
+        </div>
+
+        <!-- 4-card grid -->
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <!-- Card 1 — Personalized -->
+          <article class="group bg-white rounded-2xl p-7 shadow-sm hover:shadow-xl hover:shadow-forest/8 border border-transparent hover:border-green-100 card-lift fade-up transition-all duration-300" aria-label="Personalized recommendations">
+            <div class="w-12 h-12 rounded-xl bg-green-50 group-hover:bg-forest flex items-center justify-center mb-6 transition-colors duration-300">
+              <svg class="w-6 h-6 text-forest group-hover:text-sage transition-colors duration-300" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <h3 class="text-base font-bold text-gray-900 mb-2 leading-snug">Personalized Recommendations</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Tells the assistant your values — vegan, zero-waste, local — and it surfaces only products that genuinely match. No irrelevant results, ever.</p>
+            <div class="mt-5 flex items-center gap-1.5 text-forest text-xs font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-sage inline-block"></span>
+              Learns your preferences
+            </div>
+          </article>
+
+          <!-- Card 2 — Real-time discovery -->
+          <article class="group bg-white rounded-2xl p-7 shadow-sm hover:shadow-xl hover:shadow-forest/8 border border-transparent hover:border-green-100 card-lift fade-up transition-all duration-300" style="transition-delay:0.07s" aria-label="Real-time product discovery">
+            <div class="w-12 h-12 rounded-xl bg-green-50 group-hover:bg-forest flex items-center justify-center mb-6 transition-colors duration-300">
+              <svg class="w-6 h-6 text-forest group-hover:text-sage transition-colors duration-300" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 8v3l2 2"/>
+              </svg>
+            </div>
+            <h3 class="text-base font-bold text-gray-900 mb-2 leading-snug">Real-Time Product Discovery</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Searches our entire sustainable catalog instantly — including stock levels, certifications, and eco-ratings — and responds in seconds.</p>
+            <div class="mt-5 flex items-center gap-1.5 text-forest text-xs font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-sage inline-block"></span>
+              Live catalog access
+            </div>
+          </article>
+
+          <!-- Card 3 — WhatsApp & Web -->
+          <article class="group bg-white rounded-2xl p-7 shadow-sm hover:shadow-xl hover:shadow-forest/8 border border-transparent hover:border-green-100 card-lift fade-up transition-all duration-300" style="transition-delay:0.14s" aria-label="WhatsApp and Web integration">
+            <div class="w-12 h-12 rounded-xl bg-green-50 group-hover:bg-forest flex items-center justify-center mb-6 transition-colors duration-300">
+              <svg class="w-6 h-6 text-forest group-hover:text-sage transition-colors duration-300" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+              </svg>
+            </div>
+            <h3 class="text-base font-bold text-gray-900 mb-2 leading-snug">Web &amp; WhatsApp Ready</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Chat directly on our website or via WhatsApp — no app to install, no account required to start. Available wherever you already are.</p>
+            <div class="mt-5 flex items-center gap-1.5 text-forest text-xs font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-sage inline-block"></span>
+              Zero friction onboarding
+            </div>
+          </article>
+
+          <!-- Card 4 — Ethical shopping -->
+          <article class="group bg-white rounded-2xl p-7 shadow-sm hover:shadow-xl hover:shadow-forest/8 border border-transparent hover:border-green-100 card-lift fade-up transition-all duration-300" style="transition-delay:0.21s" aria-label="Reduce decision fatigue">
+            <div class="w-12 h-12 rounded-xl bg-green-50 group-hover:bg-forest flex items-center justify-center mb-6 transition-colors duration-300">
+              <svg class="w-6 h-6 text-forest group-hover:text-sage transition-colors duration-300" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+              </svg>
+            </div>
+            <h3 class="text-base font-bold text-gray-900 mb-2 leading-snug">Less Fatigue, More Impact</h3>
+            <p class="text-gray-500 text-sm leading-relaxed">Cut through greenwashing and confusing labels. The assistant explains every recommendation — so you shop with confidence and a clear conscience.</p>
+            <div class="mt-5 flex items-center gap-1.5 text-forest text-xs font-semibold">
+              <span class="w-1.5 h-1.5 rounded-full bg-sage inline-block"></span>
+              Transparent eco-ratings
+            </div>
+          </article>
+
+        </div>
+
+        <!-- Bottom CTA strip -->
+        <div class="mt-14 bg-forest rounded-2xl px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-6 fade-up">
+          <div>
+            <p class="text-white font-bold text-lg leading-snug">Ready to shop smarter?</p>
+            <p class="text-white/65 text-sm mt-1">Join 40,000+ conscious shoppers already using the assistant.</p>
+          </div>
+          <a href="#demo" class="shrink-0 inline-flex items-center gap-2 bg-sage text-forest font-bold text-sm px-7 py-3.5 rounded-full hover:bg-green-300 active:scale-95 transition-all duration-200 whitespace-nowrap">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            </svg>
+            Try the Assistant Free
+          </a>
+        </div>
+
+      </div>
+    </section>
+
     <!-- ─────────────────────── BENEFITS / WHY ECOSHOP ─────────────────────── -->
-    <section id="benefits" class="py-24 bg-beige" aria-labelledby="benefits-heading">
+    <section id="benefits" class="py-24 bg-white" aria-labelledby="benefits-heading">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
         <div class="text-center mb-16 fade-up">
@@ -405,144 +570,138 @@
     </section>
 
     <!-- ─────────────────────── HOW THE VIRTUAL ASSISTANT WORKS ─────────────────────── -->
-    <section id="how-it-works" class="py-24 bg-beige-dark" aria-labelledby="how-heading">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="how-it-works" class="py-24 bg-beige-dark overflow-hidden" aria-labelledby="how-heading">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
 
+        <!-- Header -->
         <div class="text-center mb-16 fade-up">
-          <span class="text-sm font-semibold text-forest uppercase tracking-widest">Smart Shopping</span>
-          <h2 id="how-heading" class="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-2">
-            Meet your <span class="text-forest">Eco Assistant</span>
+          <span class="inline-block text-xs sm:text-sm font-bold text-forest uppercase tracking-widest bg-green-100 px-4 py-1.5 rounded-full mb-4">How It Works</span>
+          <h2 id="how-heading" class="text-3xl sm:text-4xl font-extrabold text-gray-900 leading-tight">
+            From question to cart <span class="text-forest">in four steps</span>
           </h2>
-          <p class="text-gray-600 mt-4 max-w-xl mx-auto leading-relaxed">
-            Our AI-powered shopping assistant knows every product, sustainability rating, and can help you find the perfect eco-friendly match.
+          <p class="text-gray-500 mt-4 max-w-xl mx-auto leading-relaxed">
+            No sign-up. No app. Just a conversation — and the perfect eco-friendly product at the end of it.
           </p>
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <!-- Step track -->
+        <div class="step-track relative fade-up" style="transition-delay:0.05s">
+          <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 gap-x-6 relative z-10" aria-label="How the assistant works">
 
-          <!-- Steps -->
-          <ol class="space-y-8" aria-label="How the assistant works">
-
-            <li class="flex gap-5 fade-up">
-              <div class="shrink-0 w-10 h-10 rounded-full bg-forest text-white font-bold flex items-center justify-center text-sm" aria-hidden="true">1</div>
-              <div>
-                <h3 class="font-bold text-gray-900 text-lg mb-1">Ask anything about sustainability</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">Type your question — "What's the most eco-friendly fleece?" or "Find me a gift under $50" — the assistant understands natural language.</p>
-              </div>
-            </li>
-
-            <li class="flex gap-5 fade-up" style="transition-delay:0.1s">
-              <div class="shrink-0 w-10 h-10 rounded-full bg-forest text-white font-bold flex items-center justify-center text-sm" aria-hidden="true">2</div>
-              <div>
-                <h3 class="font-bold text-gray-900 text-lg mb-1">Get personalised product picks</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">The assistant matches your values — vegan, zero-waste, local — and surfaces only products that genuinely meet your criteria.</p>
-              </div>
-            </li>
-
-            <li class="flex gap-5 fade-up" style="transition-delay:0.2s">
-              <div class="shrink-0 w-10 h-10 rounded-full bg-forest text-white font-bold flex items-center justify-center text-sm" aria-hidden="true">3</div>
-              <div>
-                <h3 class="font-bold text-gray-900 text-lg mb-1">See your real environmental impact</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">Each recommendation shows CO₂ saved, water conserved, and trees planted compared to a conventional equivalent.</p>
-              </div>
-            </li>
-
-            <li class="flex gap-5 fade-up" style="transition-delay:0.3s">
-              <div class="shrink-0 w-10 h-10 rounded-full bg-forest text-white font-bold flex items-center justify-center text-sm" aria-hidden="true">4</div>
-              <div>
-                <h3 class="font-bold text-gray-900 text-lg mb-1">Add to cart with one message</h3>
-                <p class="text-gray-600 text-sm leading-relaxed">Say "Add that to my cart" and checkout without ever leaving the chat. Saved preferences speed up future visits.</p>
-              </div>
-            </li>
-          </ol>
-
-          <!-- Visual illustration -->
-          <div class="fade-up" style="transition-delay:0.15s">
-            <div class="relative bg-white rounded-3xl shadow-2xl overflow-hidden p-6 max-w-sm mx-auto">
-              <!-- Chat header -->
-              <div class="flex items-center gap-3 pb-4 border-b border-gray-100">
-                <div class="w-9 h-9 rounded-full bg-forest flex items-center justify-center shrink-0">
-                  <svg class="w-5 h-5 text-sage" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <!-- ── Step 1 ── -->
+            <li class="flex items-start gap-5 lg:flex-col lg:items-center lg:text-center lg:gap-0">
+              <!-- Number -->
+              <div class="shrink-0 w-14 h-14 rounded-full bg-forest text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-forest/30 ring-4 ring-beige-dark lg:mb-5" aria-hidden="true">1</div>
+              <!-- Card body -->
+              <div class="pt-1 lg:pt-0 flex flex-col lg:items-center">
+                <!-- Icon badge -->
+                <div class="w-11 h-11 rounded-xl bg-white border border-green-100 shadow-sm flex items-center justify-center mb-3">
+                  <svg class="w-5 h-5 text-forest" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                   </svg>
                 </div>
-                <div>
-                  <p class="font-semibold text-gray-900 text-sm">Eco Assistant</p>
-                  <p class="text-xs text-green-500 flex items-center gap-1">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 inline-block"></span>
-                    Online now
-                  </p>
-                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-1.5 leading-snug">Tell us what you need</h3>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-[220px]">Share your style, budget, occasion, or values — in plain language, just like texting a friend.</p>
+                <!-- Tag -->
+                <span class="mt-3 inline-flex items-center gap-1 text-forest text-xs font-semibold bg-green-50 px-2.5 py-1 rounded-full">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                  Web or WhatsApp
+                </span>
               </div>
+            </li>
 
-              <!-- Chat messages -->
-              <div class="space-y-4 py-4 text-sm" aria-live="polite">
-                <!-- Bot -->
-                <div class="flex gap-2 items-end">
-                  <div class="w-7 h-7 rounded-full bg-forest/10 flex items-center justify-center shrink-0" aria-hidden="true">
-                    <svg class="w-4 h-4 text-forest" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 00-1 1v1H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2h-3V3a1 1 0 00-1-1z"/></svg>
-                  </div>
-                  <div class="bg-gray-100 rounded-2xl rounded-bl-sm px-4 py-2.5 max-w-[75%]">
-                    <p class="text-gray-700">Hi! I'm your Eco Assistant 🌿 How can I help you shop sustainably today?</p>
-                  </div>
+            <!-- ── Step 2 ── -->
+            <li class="flex items-start gap-5 lg:flex-col lg:items-center lg:text-center lg:gap-0" style="transition-delay:0.1s">
+              <div class="shrink-0 w-14 h-14 rounded-full bg-forest text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-forest/30 ring-4 ring-beige-dark lg:mb-5" aria-hidden="true">2</div>
+              <div class="pt-1 lg:pt-0 flex flex-col lg:items-center">
+                <div class="w-11 h-11 rounded-xl bg-white border border-green-100 shadow-sm flex items-center justify-center mb-3">
+                  <svg class="w-5 h-5 text-forest" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18"/>
+                  </svg>
                 </div>
-
-                <!-- User -->
-                <div class="flex justify-end">
-                  <div class="bg-forest text-white rounded-2xl rounded-br-sm px-4 py-2.5 max-w-[75%]">
-                    <p>Looking for eco-friendly gifts under $50</p>
-                  </div>
-                </div>
-
-                <!-- Bot typing / response -->
-                <div class="flex gap-2 items-end">
-                  <div class="w-7 h-7 rounded-full bg-forest/10 flex items-center justify-center shrink-0" aria-hidden="true">
-                    <svg class="w-4 h-4 text-forest" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 00-1 1v1H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2h-3V3a1 1 0 00-1-1z"/></svg>
-                  </div>
-                  <div class="bg-gray-100 rounded-2xl rounded-bl-sm px-4 py-2.5 max-w-[80%]">
-                    <p class="text-gray-700 mb-2">Great choice! Here are my top 3 picks 🎁</p>
-                    <div class="space-y-2">
-                      <div class="flex items-center gap-2 bg-white rounded-xl p-2">
-                        <img src="https://placehold.co/40x40/4ade80/166534?text=🌿" alt="Beeswax wraps" class="w-10 h-10 rounded-lg object-cover"/>
-                        <div>
-                          <p class="font-semibold text-gray-800 text-xs">Beeswax Wrap Set</p>
-                          <p class="text-forest font-bold text-xs">$28 · saves 52kg CO₂/yr</p>
-                        </div>
-                      </div>
-                      <div class="flex items-center gap-2 bg-white rounded-xl p-2">
-                        <img src="https://placehold.co/40x40/4ade80/166534?text=🛍" alt="Recycled tote" class="w-10 h-10 rounded-lg object-cover"/>
-                        <div>
-                          <p class="font-semibold text-gray-800 text-xs">Recycled Tote Bag</p>
-                          <p class="text-forest font-bold text-xs">$24 · 100% recycled</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Typing indicator -->
-                <div class="flex gap-2 items-end">
-                  <div class="w-7 h-7 rounded-full bg-forest/10 flex items-center justify-center shrink-0" aria-hidden="true">
-                    <svg class="w-4 h-4 text-forest" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 00-1 1v1H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2h-3V3a1 1 0 00-1-1z"/></svg>
-                  </div>
-                  <div class="bg-gray-100 rounded-2xl rounded-bl-sm px-4 py-3 flex gap-1.5 items-center" aria-label="Assistant is typing">
-                    <span class="pulse-dot w-2 h-2 rounded-full bg-gray-400"></span>
-                    <span class="pulse-dot w-2 h-2 rounded-full bg-gray-400"></span>
-                    <span class="pulse-dot w-2 h-2 rounded-full bg-gray-400"></span>
-                  </div>
-                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-1.5 leading-snug">AI searches the catalog</h3>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-[220px]">Our AI qualifies your request and scans thousands of certified products — checking eco-ratings, stock, and price in real time.</p>
+                <span class="mt-3 inline-flex items-center gap-1 text-forest text-xs font-semibold bg-green-50 px-2.5 py-1 rounded-full">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  Under 3 seconds
+                </span>
               </div>
+            </li>
 
-              <!-- Input bar -->
-              <div class="border-t border-gray-100 pt-3 flex gap-2">
-                <input type="text" placeholder="Ask about any product..." class="flex-1 text-xs bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 outline-none focus:border-forest" aria-label="Chat input"/>
-                <button class="w-9 h-9 rounded-full bg-forest flex items-center justify-center shrink-0 hover:bg-green-800 transition-colors" aria-label="Send message">
-                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-                </button>
+            <!-- ── Step 3 ── -->
+            <li class="flex items-start gap-5 lg:flex-col lg:items-center lg:text-center lg:gap-0" style="transition-delay:0.2s">
+              <div class="shrink-0 w-14 h-14 rounded-full bg-forest text-white font-extrabold text-lg flex items-center justify-center shadow-lg shadow-forest/30 ring-4 ring-beige-dark lg:mb-5" aria-hidden="true">3</div>
+              <div class="pt-1 lg:pt-0 flex flex-col lg:items-center">
+                <div class="w-11 h-11 rounded-xl bg-white border border-green-100 shadow-sm flex items-center justify-center mb-3">
+                  <svg class="w-5 h-5 text-forest" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                  </svg>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-1.5 leading-snug">Get rich recommendations</h3>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-[220px]">Receive curated picks with product images, sustainability scores, CO₂ saved, and a short reason why each one fits your request.</p>
+                <span class="mt-3 inline-flex items-center gap-1 text-forest text-xs font-semibold bg-green-50 px-2.5 py-1 rounded-full">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  With eco-scores
+                </span>
               </div>
+            </li>
+
+            <!-- ── Step 4 ── -->
+            <li class="flex items-start gap-5 lg:flex-col lg:items-center lg:text-center lg:gap-0" style="transition-delay:0.3s">
+              <div class="shrink-0 w-14 h-14 rounded-full bg-sage text-forest font-extrabold text-lg flex items-center justify-center shadow-lg shadow-sage/40 ring-4 ring-beige-dark lg:mb-5" aria-hidden="true">4</div>
+              <div class="pt-1 lg:pt-0 flex flex-col lg:items-center">
+                <div class="w-11 h-11 rounded-xl bg-forest border border-forest shadow-sm flex items-center justify-center mb-3">
+                  <svg class="w-5 h-5 text-sage" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                  </svg>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-1.5 leading-snug">Add to cart or chat on WhatsApp</h3>
+                <p class="text-gray-500 text-sm leading-relaxed max-w-[220px]">Tap "Add to cart" and check out in seconds — or keep the conversation going on WhatsApp whenever it suits you.</p>
+                <span class="mt-3 inline-flex items-center gap-1 text-forest text-xs font-semibold bg-sage/20 px-2.5 py-1 rounded-full">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                  One-tap checkout
+                </span>
+              </div>
+            </li>
+
+          </ol>
+        </div>
+
+        <!-- Connector dots between steps — mobile vertical separator -->
+        <div class="lg:hidden flex flex-col gap-0 mt-6 mb-2 pl-6 space-y-1" aria-hidden="true">
+        </div>
+
+        <!-- Bottom highlight bar -->
+        <div class="mt-16 grid sm:grid-cols-3 gap-4 fade-up">
+          <div class="bg-white rounded-2xl px-6 py-5 flex items-center gap-4 shadow-sm border border-green-50">
+            <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-forest" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+              <p class="font-bold text-gray-900 text-sm">Avg. response time</p>
+              <p class="text-forest font-extrabold text-xl leading-tight">~2s</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl px-6 py-5 flex items-center gap-4 shadow-sm border border-green-50">
+            <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-forest" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <div>
+              <p class="font-bold text-gray-900 text-sm">Products with eco-rating</p>
+              <p class="text-forest font-extrabold text-xl leading-tight">100%</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl px-6 py-5 flex items-center gap-4 shadow-sm border border-green-50">
+            <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
+              <svg class="w-5 h-5 text-forest" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
+            </div>
+            <div>
+              <p class="font-bold text-gray-900 text-sm">Channels supported</p>
+              <p class="text-forest font-extrabold text-xl leading-tight">Web + WhatsApp</p>
             </div>
           </div>
         </div>
+
       </div>
     </section>
 
