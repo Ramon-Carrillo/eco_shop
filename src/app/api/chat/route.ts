@@ -21,7 +21,9 @@ const fewShotExamples = readFileSync(
 
 const MAX_MESSAGES = 20;
 const ALLOWED_ORIGINS = new Set(
-  (process.env.ALLOWED_ORIGINS ?? "http://localhost:3000").split(",")
+  (process.env.ALLOWED_ORIGINS ?? "http://localhost:3000")
+    .split(",")
+    .map((o) => o.trim().replace(/\/+$/, ""))
 );
 
 const messageSchema = z.object({
